@@ -17,7 +17,7 @@ class BasicHashTable:
     def __init__(self, capacity):
         self.max = capacity
         self.count = 0
-        self.hash_table = [None] * capacity
+        self.table = [None] * capacity
         
 
 
@@ -29,8 +29,8 @@ def hash(string, max):
     hash = 5381
     k = 33
     for char in string:
-        newHash = (hash * k) + ord(char) % max - 1
-    return hash
+        hash = (hash * k) + ord(char)
+    return hash % max - 1
 
 
 # '''
@@ -40,10 +40,10 @@ def hash(string, max):
 # '''
 def hash_table_insert(hash_table, key, value):
     index = hash(key, hash_table.max)
-    if(hash_table[index] !== None):
-        print(f"!!Warning!!  You have overridden {hash_table[index]} with {value}!")
+    if(hash_table.table[index] != None):
+        print(f"!!Warning!!  You have overridden {hash_table.table[index]} with {value}!")
         hash_table.count -= 1
-    hash_table[index] = Pair(key, value)
+    hash_table.table[index] = Pair(key, value)
     hash_table.count += 1
 
 
@@ -53,12 +53,14 @@ def hash_table_insert(hash_table, key, value):
 # If you try to remove a value that isn't there, print a warning.
 # '''
 def hash_table_remove(hash_table, key):
-    index = hash_table.hash(key, hash_table.max)
+    index = hash(key, hash_table.max)
+    print("Removing")
 
-    if (hash_table[index] == None):
+    if (hash_table.table[index] == None):
+        print("FOUND NONE")
         print(f"!!Warning!! There is no {key} in the table!")
     else:
-        hash_table[index] == None
+        hash_table.table[index] = None
         hash_table.count -= 1
 
 
@@ -70,7 +72,7 @@ def hash_table_remove(hash_table, key):
 # '''
 def hash_table_retrieve(hash_table, key):
     index = hash(key, hash_table.max)
-    return hash_table[index]
+    return hash_table.table[index]
 
 
 def Testing():
@@ -83,7 +85,7 @@ def Testing():
     if hash_table_retrieve(ht, "line") is None:
         print("...gone tomorrow (success!)")
     else:
-        print("ERROR:  STILL HERE")
+        print("ERROR:  STILL HERE", hash_table_retrieve(ht, "line"))
 
 
 Testing()
